@@ -1,0 +1,2 @@
+1、原生app.MapHub<ChatHub>("/ChatRoomHub"); 方法可以正常连接
+2、[MapHub("/ChatRoomHub")] 无法连接

@@ -1,0 +1,6 @@
+@SignaIRDemo_HostAddress = http://localhost:5283
+
+GET {{SignaIRDemo_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

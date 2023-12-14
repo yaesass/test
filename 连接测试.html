@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>SignalR 连接测试</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/5.0.14/signalr.min.js"></script>
+  </head>
+
+  <body>
+    <h1>SignalR 连接测试</h1>
+
+    <div id="messageDisplay"></div>
+
+    <button onclick="connectToSignalR()">连接到SignalR服务</button>
+    <button onclick="sendMessage()">发送消息</button>
+
+    <script>
+      var connection;
+
+      // 连接到SignalR服务
+      function connectToSignalR() {
+        var url =
+          "https://localhost:7045/ChatRoomHub"; // 替换为你的SignalR服务地址
+
+        connection = new signalR.HubConnectionBuilder().withUrl(url).withAutomaticReconnect().build();
+
+        connection
+          .start()
+          .then(function () {
+            console.log("已连接到SignalR服务");
+            showMessage("已连接到SignalR服务");
+          })
+          .catch(function (error) {
+            console.log("连接SignalR服务失败: " + error);
+            showMessage("连接SignalR服务失败");
+          });
+
+        connection.on("ReceiveMessage", function (user, message) {
+          // 'ReceiveMessage' 指定了服务端的方法名，根据实际情况修改
+          console.log("收到消息: " + user + " - " + message);
+          showMessage("收到消息: " + user + " - " + message);
+        });
+      }
+
+      // 发送消息
+      function sendMessage() {
+        var user = "User"; // 替换为用户名
+        var message = "Hello SignalR!"; // 替换为消息内容
+
+        connection
+          .invoke("SendMessage", user, message) // 'SendMessage' 指定了服务端的方法名，根据实际情况修改
+          .catch(function (error) {
+            console.log("发送消息失败: " + error);
+            showMessage("发送消息失败");
+          });
+      }
+
+      // 显示消息
+      function showMessage(message) {
+        var messageElement = document.createElement("p");
+        messageElement.innerText = message;
+        document.getElementById("messageDisplay").appendChild(messageElement);
+      }
+    </script>
+  </body>
+</html>
